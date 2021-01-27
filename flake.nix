@@ -28,6 +28,7 @@
             xorg.libX11
             cmake
             python38
+            cntr
           ];
           nativeBuildInputs = with pkgs; [
             pkg-config
@@ -47,12 +48,10 @@
 
         defaultPackage = pkgs.stdenv.mkDerivation {
           name = "flutter-pi";
-          src = pkgs.fetchFromGitHub {
-            url = "https://github.com//.git";
-            owner = "ardera";
-            repo = "flutter-pi";
+          src = pkgs.fetchgit {
+            url = "https://github.com/ardera/flutter-pi.git";
             rev = "133600ca46892e59b679f31378a7be1dc5aaa4d8";
-            sha256 = "sha256-udpbSL8xnzf20A1pYYNlYjdp8ME8AVaAkMMiw53K6CU=";
+            sha256 = "sha256-c0OwXz6RwLaJd/VNigWHjsn46wLYDuMmros6o5QL0QA=";
           };
 
           buildInputs = with pkgs; [
