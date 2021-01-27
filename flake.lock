@@ -1,0 +1,57 @@
+{
+  "nodes": {
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1610051610,
+        "narHash": "sha256-U9rPz/usA1/Aohhk7Cmc2gBrEEKRzcW4nwPWMPwja4Y=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "3982c9903e93927c2164caa727cd3f6a0e6d14cc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1602230526,
+        "narHash": "sha256-3/ucBPYg42P+1ji5/7q227Ek/Eq2C7zeiB9sZl5UpIY=",
+        "path": "/nix/store/a4svi29pmh2qips8h6649vvzhk5nk5qd-source",
+        "rev": "0b8799ecaaf0dc6b4c11583a3c96ca5b40fcfdfb",
+        "type": "path"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "root": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": "nixpkgs",
+        "unstable": "unstable"
+      }
+    },
+    "unstable": {
+      "locked": {
+        "lastModified": 1611490763,
+        "narHash": "sha256-uN1Aoa4pJW5z4zJ6UHcM14oNds0qyo16ad1vfZEh/Zg=",
+        "owner": "thiagokokada",
+        "repo": "nixpkgs",
+        "rev": "49a37a887c96d68e23993778e8330b1f36852473",
+        "type": "github"
+      },
+      "original": {
+        "owner": "thiagokokada",
+        "repo": "nixpkgs",
+        "rev": "49a37a887c96d68e23993778e8330b1f36852473",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
