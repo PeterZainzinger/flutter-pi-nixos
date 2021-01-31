@@ -39,7 +39,9 @@
       }) // {
         helpers = {
           builder = import ./lib/builder.nix;
-          config_gen = import ./lib/config_gen.nix;
+          config_gen = (import ./lib/config_gen.nix {
+            flutter_pi = self.packages.aarch64-linux.flutter_pi;
+          });
         };
       });
 }

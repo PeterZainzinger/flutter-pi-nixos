@@ -1,6 +1,6 @@
-{ pkgs, lib ? pkgs.stdenv.lib,
-#sshPubKeys ? [ ],
-... }: {
+{ flutter_pi, ... }:
+{ sshPubKeys, ... }:
+{ pkgs, lib ? pkgs.stdenv.lib, ... }: {
 
   sdImage.compressImage = false;
 
@@ -65,7 +65,7 @@
 
     };
 
-    #extraUsers.root.openssh.authorizedKeys.keys = sshPubKeys;
+    extraUsers.root.openssh.authorizedKeys.keys = sshPubKeys;
 
   };
 
@@ -75,6 +75,7 @@
     curl
     git
     raspberrypi-tools
+    flutter_pi
   ];
 
   networking = {
