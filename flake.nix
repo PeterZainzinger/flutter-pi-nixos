@@ -19,21 +19,28 @@
         engineHeaderHash =
           "sha256:1b12iys33b38ph4b7qgca4gys8lwda90xflg89kiv6vasj0nlk8a";
         flutterPiGitVersion = "133600ca46892e59b679f31378a7be1dc5aaa4d8";
+        arm = "arm64";
         flutterPiGitHash =
           "sha256-c0OwXz6RwLaJd/VNigWHjsn46wLYDuMmros6o5QL0QA=";
+        engineBins = import ./lib/engine_bin.nix { inherit pkgs arm; };
         flutter_pi = import ./lib/flutter_pi.nix {
-          pkgs = pkgs;
-          engineHeaderVersion = engineHeaderVersion;
-          engineHeaderHash = engineHeaderHash;
-          flutterPiGitVersion = flutterPiGitVersion;
-          flutterPiGitHash = flutterPiGitHash;
+          inherit pkgs engineHeaderVersion engineHeaderHash flutterPiGitVersion
+            flutterPiGitHash;
         };
 
       in rec {
 
-        devShell = pkgs.mkShell { buildInputs = with pkgs; [ flutter_pi ]; };
+        devShell = pkgs.mkShell {
+          buildInputs = with pkgs; [ flutter_pi ];
+          shellHook = ''
+            export ICU_DATA=${engineBins}
+          '';
+        };
 
-        packages = { flutter_pi = flutter_pi; };
+        packages = {
+          flutter_pi = flutter_pi;
+          engineBins = engineBins;
+        };
 
         defaultPackage = flutter_pi;
       }) // {
@@ -41,6 +48,7 @@
           builder = import ./lib/builder.nix;
           config_gen = (import ./lib/config_gen.nix {
             flutter_pi = self.packages.aarch64-linux.flutter_pi;
+            engineBins = self.packages.aarch64-linux.engineBins;
           });
         };
       });

@@ -1,5 +1,8 @@
-{ flutter_pi, ... }:
+# passed by flake
+{ flutter_pi, engineBins, ... }:
+# passed from user
 { sshPubKeys, ... }:
+# module args
 { pkgs, lib ? pkgs.stdenv.lib, ... }: {
 
   sdImage.compressImage = false;
@@ -69,14 +72,19 @@
 
   };
 
-  environment.systemPackages = with pkgs; [
-    wget
-    vim
-    curl
-    git
-    raspberrypi-tools
-    flutter_pi
-  ];
+  environment = {
+    variables = { ICU_DATA = "${engineBins}/icudtl.dat"; };
+    #sessionVariables = { LD_LIBRARY_PATH = "${engineBins}/icudtl.dat"; };
+    systemPackages = with pkgs; [
+      wget
+      vim
+      curl
+      git
+      raspberrypi-tools
+      flutter_pi
+      engineBins
+    ];
+  };
 
   networking = {
     hostName = "pi3";
