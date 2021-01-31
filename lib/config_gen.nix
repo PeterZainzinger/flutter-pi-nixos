@@ -1,9 +1,8 @@
-{ pkgs, ... }:
-let gpuMemory = "64";
-in {
-  imports = [ # Include the results of the hardware scan.
-    ./hardware-configuration.nix
-  ];
+{ pkgs, lib ? pkgs.stdenv.lib,
+#sshPubKeys ? [ ],
+... }: {
+
+  sdImage.compressImage = false;
 
   boot = {
     kernelPackages = pkgs.linuxPackages_rpi4;
@@ -15,13 +14,20 @@ in {
         version = 3;
         uboot.enable = true;
         firmwareConfig = ''
-          gpu_mem=${gpuMemory}
+          gpu_mem=64
         '';
       };
     };
     cleanTmpDir = true;
-    kernel = { sysctl."vm.overcommit_memory" = "1"; };
+    #kernel = { sysctl."vm.overcommit_memory" = "1"; };
   };
+
+  #fileSystems."/" = {
+  #  device = "/dev/disk/by-uuid/44444444-4444-4444-8888-888888888888";
+  #  fsType = "ext4";
+  #};
+  nix.maxJobs = lib.mkDefault 4;
+  powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
 
   hardware = {
     deviceTree = {
@@ -59,6 +65,8 @@ in {
 
     };
 
+    #extraUsers.root.openssh.authorizedKeys.keys = sshPubKeys;
+
   };
 
   environment.systemPackages = with pkgs; [
@@ -89,4 +97,3 @@ in {
   system.stateVersion = "20.03";
 
 }
-

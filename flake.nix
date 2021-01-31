@@ -37,6 +37,9 @@
 
         defaultPackage = flutter_pi;
       }) // {
-        helpers = { builder = import ./lib/builder.nix; };
+        helpers = {
+          builder = import ./lib/builder.nix;
+          config_gen = import ./lib/config_gen.nix;
+        };
       });
 }
