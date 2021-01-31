@@ -1,8 +1,4 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 let gpuMemory = "64";
 in {
   imports = [ # Include the results of the hardware scan.
@@ -26,8 +22,6 @@ in {
     cleanTmpDir = true;
     kernel = { sysctl."vm.overcommit_memory" = "1"; };
   };
-
-nixpkgs.config.allowUnsupportedSystem = true;
 
   hardware = {
     deviceTree = {
@@ -64,7 +58,7 @@ nixpkgs.config.allowUnsupportedSystem = true;
       extraGroups = [ "wheel" "audio" "tty" "render" "pi" "video" ];
 
     };
-    
+
   };
 
   environment.systemPackages = with pkgs; [
@@ -73,7 +67,6 @@ nixpkgs.config.allowUnsupportedSystem = true;
     curl
     git
     raspberrypi-tools
-    cntr
   ];
 
   networking = {
@@ -85,8 +78,6 @@ nixpkgs.config.allowUnsupportedSystem = true;
     };
   };
 
-  time.timeZone = "Europe/Vienna";
-
   services = {
     openssh = {
       enable = true;
@@ -94,7 +85,6 @@ nixpkgs.config.allowUnsupportedSystem = true;
       passwordAuthentication = true;
     };
   };
-
 
   system.stateVersion = "20.03";
 
