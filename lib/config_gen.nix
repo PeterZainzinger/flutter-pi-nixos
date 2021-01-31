@@ -1,11 +1,26 @@
 # passed by flake
-{ flutter_pi, engineBins, ... }:
-# passed from user
-{ sshPubKeys, ... }:
+{ flutter_pi, flutter_pi_wrapped, engineBins, ... }:
+# passed from user 
+# TODO(peter): ... needed?
+{ initial ? false, cfg, ... }:
 # module args
 { pkgs, lib ? pkgs.stdenv.lib, ... }: {
 
-  sdImage.compressImage = false;
+  sdImage = lib.mkIf initial { compressImage = false; };
+
+  systemd.user.services."app_release" = {
+    enable = true;
+    path = [ flutter_pi ];
+    environment = {
+      LD_LIBRARY_PATH = "${engineBins}";
+      ICU_DATA = "${engineBins}/icudtl.dat";
+    };
+    serviceConfig = {
+      ExecStartPre = "/run/current-system/sw/bin/sleep 30";
+      ExecStart = "${flutter_pi}/bin/flutter-pi --release %h/app";
+    };
+    after = [ "multi-user.target " ];
+  };
 
   boot = {
     kernelPackages = pkgs.linuxPackages_rpi4;
@@ -22,13 +37,16 @@
       };
     };
     cleanTmpDir = true;
-    #kernel = { sysctl."vm.overcommit_memory" = "1"; };
+    kernel = lib.mkIf (!initial) { sysctl."vm.overcommit_memory" = "1"; };
   };
 
-  #fileSystems."/" = {
-  #  device = "/dev/disk/by-uuid/44444444-4444-4444-8888-888888888888";
-  #  fsType = "ext4";
-  #};
+  fileSystems = lib.mkIf (!initial) {
+    "/" = {
+      device = "/dev/disk/by-uuid/44444444-4444-4444-8888-888888888888";
+      fsType = "ext4";
+    };
+  };
+
   nix.maxJobs = lib.mkDefault 4;
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
 
@@ -64,30 +82,39 @@
       uid = 1000;
       password = "peter";
       isNormalUser = true;
-      extraGroups = [ "wheel" "audio" "tty" "render" "pi" "video" ];
+      extraGroups =
+        [ "wheel" "audio" "tty" "render" "pi" "video" "plugdev" "input" ];
 
     };
 
-    extraUsers.root.openssh.authorizedKeys.keys = sshPubKeys;
+    extraUsers.root.openssh.authorizedKeys.keys = cfg.gen_config.sshPubKeys;
 
   };
 
   environment = {
     variables = { ICU_DATA = "${engineBins}/icudtl.dat"; };
-    #sessionVariables = { LD_LIBRARY_PATH = "${engineBins}/icudtl.dat"; };
     systemPackages = with pkgs; [
-      wget
-      vim
-      curl
-      git
       raspberrypi-tools
       flutter_pi
+      flutter_pi_wrapped
       engineBins
     ];
+    etc = {
+      "nixos/flake.nix" = {
+        source = ./flake_host.nix;
+        mode = "0444";
+        user = "root";
+      };
+      "nixos/host_config.nix" = {
+        source = cfg.self;
+        mode = "0444";
+        user = "root";
+      };
+    };
   };
 
   networking = {
-    hostName = "pi3";
+    hostName = cfg.hostName;
     useDHCP = false;
     interfaces = {
       eth0.useDHCP = true;

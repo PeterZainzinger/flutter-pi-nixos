@@ -27,6 +27,10 @@
           inherit pkgs engineHeaderVersion engineHeaderHash flutterPiGitVersion
             flutterPiGitHash;
         };
+        flutter_pi_wrapped = import ./lib/flutter_pi_wrapped.nix {
+          inherit pkgs flutter_pi engineBins;
+
+        };
 
       in rec {
 
@@ -39,15 +43,16 @@
 
         packages = {
           flutter_pi = flutter_pi;
+          flutter_pi_wrapped = flutter_pi_wrapped;
           engineBins = engineBins;
         };
-
         defaultPackage = flutter_pi;
       }) // {
         helpers = {
           builder = import ./lib/builder.nix;
           config_gen = (import ./lib/config_gen.nix {
             flutter_pi = self.packages.aarch64-linux.flutter_pi;
+            flutter_pi_wrapped = self.packages.aarch64-linux.flutter_pi_wrapped;
             engineBins = self.packages.aarch64-linux.engineBins;
           });
         };
