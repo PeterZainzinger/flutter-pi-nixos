@@ -1,7 +1,9 @@
 {
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
-    unstable.url = "github:nixos/nixpkgs/master";
+    # flutter 1.24
+    unstable.url =
+      "github:thiagokokada/nixpkgs/49a37a887c96d68e23993778e8330b1f36852473";
   };
   outputs = { self, nixpkgs, flake-utils, unstable }:
     (flake-utils.lib.eachDefaultSystem (system:
@@ -16,10 +18,10 @@
         engineHeaderVersion = "2f0af3715217a0c2ada72c717d4ed9178d68f6ed";
         engineHeaderHash =
           "sha256:1b12iys33b38ph4b7qgca4gys8lwda90xflg89kiv6vasj0nlk8a";
-        flutterPiGitVersion = "ca624695700733e4403d90c1671506f1381d18d5";
+        flutterPiGitVersion = "133600ca46892e59b679f31378a7be1dc5aaa4d8";
         arm = "arm64";
         flutterPiGitHash =
-          "sha256-ytHGM6fF2Rq15+lE+YtPADJ0CKHtC2kRpAT7vt0nERs=";
+          "sha256-c0OwXz6RwLaJd/VNigWHjsn46wLYDuMmros6o5QL0QA=";
         engineBins = import ./lib/engine_bin.nix { inherit pkgs arm; };
         flutter_pi = import ./lib/flutter_pi.nix {
           inherit pkgs engineHeaderVersion engineHeaderHash flutterPiGitVersion
@@ -47,7 +49,9 @@
         defaultPackage = flutter_pi;
       }) // {
         helpers = {
-          builder = import ./lib/builder.nix;
+          builder = import ./lib/builder.nix {
+            engineBins = self.packages.x86_64-linux.engineBins;
+          };
           config_gen = (import ./lib/config_gen.nix {
             flutter_pi = self.packages.aarch64-linux.flutter_pi;
             flutter_pi_wrapped = self.packages.aarch64-linux.flutter_pi_wrapped;
@@ -56,3 +60,4 @@
         };
       });
 }
+

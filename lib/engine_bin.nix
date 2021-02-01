@@ -2,11 +2,11 @@
 
 pkgs.stdenv.mkDerivation {
   name = "flutter-engine-bins-${arm}";
-  version = "1.22.5";
+  version = "1.22.4";
   src = pkgs.fetchgit {
     url = "https://github.com/ardera/flutter-pi";
-    rev = "eb4ce022e03a9c971874ed0328613f93304e2bf4";
-    sha256 = "sha256-FSYdSGtFtQESXvgXBHK+oBYvQUXr8SBBlwW66HMIvW8=";
+    rev = "341288caed5ef3450ed545e196733fee0cf6a568";
+    sha256 = "sha256-/5gqLOtpLlh5CW1I/uEOZTb17rM0c2igngNfSs3LlPA=";
   };
   nativeBuildInputs = [ pkgs.autoPatchelfHook ];
   configurePhase = "true";

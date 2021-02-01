@@ -1,5 +1,6 @@
+{ engineBins, }:
 { pkgs, flutter ? pkgs.flutter, src, package, name ? package
-, mainPath ? "main.dart", arm ? "arm64", home ? "/tmp", engineBins, ... }:
+, mainPath ? "main.dart", arm ? "arm64", home ? "/tmp", ... }:
 pkgs.stdenv.mkDerivation {
   inherit name src;
 
