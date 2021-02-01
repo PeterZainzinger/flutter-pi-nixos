@@ -4,7 +4,7 @@
     unstable.url =
       "github:thiagokokada/nixpkgs/49a37a887c96d68e23993778e8330b1f36852473";
     flutterpinixos.url =
-      "git+ssh://gitlab@git.peterzainzinger.com/peter/flutter-pi-nixos.git";
+      "git+https://github.com/PeterZainzinger/flutter-pi-nixos.git/master";
 
   };
   description = "flutter setup";
