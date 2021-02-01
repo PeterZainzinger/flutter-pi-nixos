@@ -16,10 +16,11 @@
       ICU_DATA = "${engineBins}/icudtl.dat";
     };
     serviceConfig = {
-      ExecStartPre = "/run/current-system/sw/bin/sleep 30";
+      ExecStartPre = "/run/current-system/sw/bin/sleep 10";
       ExecStart = "${flutter_pi}/bin/flutter-pi --release %h/app";
     };
-    after = [ "multi-user.target " ];
+    wantedBy = [ "multi-user.target " ];
+
   };
 
   boot = {
