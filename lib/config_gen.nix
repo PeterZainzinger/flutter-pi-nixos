@@ -7,7 +7,12 @@
 { pkgs, lib ? pkgs.stdenv.lib, ... }:
 
 # mkIf does not work for this??
-(if initial then { sdImage.compressImage = false; } else { }) // ({
+(if initial then {
+  sdImage.compressImage = false;
+  hardware.deviceTree.base = pkgs.device-tree_rpi;
+} else {
+  hardware.deviceTree.kernelPackage = pkgs.device-tree_rpi;
+}) // ({
 
   systemd.user.services."app_release" = {
     enable = true;
@@ -20,8 +25,7 @@
       ExecStartPre = "/run/current-system/sw/bin/sleep 10";
       ExecStart = "${flutter_pi}/bin/flutter-pi --release %h/app";
     };
-    #    wantedBy = [ "multi-user.target " ];
-
+    wantedBy = [ "basic.target " ];
   };
 
   boot = {
@@ -54,7 +58,6 @@
 
   hardware = {
     deviceTree = {
-      base = pkgs.device-tree_rpi;
       overlays = [ "${pkgs.device-tree_rpi.overlays}/vc4-fkms-v3d.dtbo" ];
     };
     enableRedistributableFirmware = true;
@@ -96,7 +99,7 @@
   environment = {
     variables = { ICU_DATA = "${engineBins}/icudtl.dat"; };
     systemPackages = with pkgs; [
-      raspberrypi-tools
+      (if initial then raspberrypi-tools else libraspberrypi)
       flutter_pi
       flutter_pi_wrapped
       engineBins
@@ -104,12 +107,12 @@
     etc = {
       "nixos/flake.nix" = {
         source = ./flake_host.nix;
-        mode = "0660";
+        mode = "0444";
         user = "root";
       };
       "nixos/host_config.nix" = {
         source = cfg.self;
-        mode = "0660";
+        mode = "0444";
         user = "root";
       };
     };
