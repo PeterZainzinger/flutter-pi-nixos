@@ -19,7 +19,7 @@
       ExecStartPre = "/run/current-system/sw/bin/sleep 10";
       ExecStart = "${flutter_pi}/bin/flutter-pi --release %h/app";
     };
-    wantedBy = [ "multi-user.target " ];
+    #    wantedBy = [ "multi-user.target " ];
 
   };
 
