@@ -4,9 +4,10 @@
 # TODO(peter): ... needed?
 { initial ? false, cfg, ... }:
 # module args
-{ pkgs, lib ? pkgs.stdenv.lib, ... }: {
+{ pkgs, lib ? pkgs.stdenv.lib, ... }:
 
-  sdImage = lib.mkIf initial { compressImage = false; };
+# mkIf does not work for this??
+(if initial then { sdImage.compressImage = false; } else { }) // ({
 
   systemd.user.services."app_release" = {
     enable = true;
@@ -103,12 +104,12 @@
     etc = {
       "nixos/flake.nix" = {
         source = ./flake_host.nix;
-        mode = "0444";
+        mode = "0660";
         user = "root";
       };
       "nixos/host_config.nix" = {
         source = cfg.self;
-        mode = "0444";
+        mode = "0660";
         user = "root";
       };
     };
@@ -133,4 +134,4 @@
 
   system.stateVersion = "20.03";
 
-}
+})

@@ -15,7 +15,7 @@
     in {
       nixosConfigurations."${hostName}" = let
         pi_config = flutterpinixos.helpers.config_gen {
-          cfg = cfg.gen_config;
+          cfg = cfg;
           initial = false;
         };
       in nixpkgs.lib.makeOverridable nixpkgs.lib.nixosSystem {
